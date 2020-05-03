@@ -19,7 +19,6 @@ export default class SigninPage extends Component{
     };  
   }
 
-
   async _storeData(uid) {
     try {
       var userObj = {
@@ -35,7 +34,10 @@ export default class SigninPage extends Component{
     }
   }
 
-  signin = () => {
+   signin = async () =>  {
+
+
+
     if(this.state.email === '' && this.state.password === '') {
       Toast.showWithGravity('Enter email or password', Toast.LONG , Toast.TOP);
     } else {

@@ -94,14 +94,12 @@ export default class CartPage extends Component{
   render(){
     return (
       <SafeAreaView style={{flex : 1, justifyContent : 'flex-end'}}>
-        <View style={{flexDirection : 'row', width : '100%', height : screenHeight * 1 / 12}}>
-          <TouchableOpacity style={styles.backBtnView} onPress={() => this.props.navigation.navigate('CheckoutPage')}>
+          {/*<TouchableOpacity style={styles.backBtnView} onPress={() => this.props.navigation.navigate('CheckoutPage')}>
             <Icon name="arrow-left"  size={30} color="white"/>
-          </TouchableOpacity>        
+            </TouchableOpacity>*/}        
           <View style={styles.pageTitle}>
             <Text style={{fontSize : 22}}>Cart</Text>
           </View>        
-        </View>
         {this.state.isEmptyData &&
           <ActivityIndicator size="large" color="#9E9E9E"/>
         }
@@ -214,7 +212,7 @@ const styles = StyleSheet.create({
       flexDirection : 'row'
     },
     pageTitle : {
-      width : '60%',
+      width : '100%',
       height : screenHeight * 1 / 24,
       alignItems : 'center',
       justifyContent : 'center',

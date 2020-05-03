@@ -43,9 +43,9 @@ export default class CheckoutPage extends Component{
     var grossprice = 0;
     var totalGrossPrice = 0;
     for( var i=0; i<productlist.length; i++){
-      product_fee = product_fee + productlist[i].ourfee * productlist[i].buyQuantity;
-      grossprice = grossprice + productlist[i].grossprice * productlist[i].buyQuantity;
-      totalGrossPrice = totalGrossPrice + productlist[i].grossprice * productlist[i].buyQuantity;
+      product_fee =  productlist[i].ourfee * productlist[i].buyQuantity;
+      grossprice =  productlist[i].grossprice * productlist[i].buyQuantity;
+      totalGrossPrice =  totalGrossPrice + productlist[i].grossprice * productlist[i].buyQuantity;
     }
     this.setState({product_fee : Math.round(product_fee)});
     this.setState({grossprice : Math.round(grossprice)});
@@ -128,16 +128,16 @@ export default class CheckoutPage extends Component{
                 <Text style={{fontSize:16, fontWeight : '400'}}>$ {Math.round(this.state.grossprice * 0.05)}</Text>
               </View> 
               <Divider style={{ margin: 20, backgroundColor: '#a0a3a0' }} />
-              <View style={styles.totaltextview}> 
-                <Text style={{fontSize:16, fontWeight : '400'}}>Total Amount</Text>
-                <Text style={{fontSize:16, fontWeight : '400', color : '#cf4a08'}}>$ {this.state.totalGrossPrice + this.state.product_fee + Math.round(this.state.grossprice * 0.05)}</Text>
-              </View>              
             </View>            
             )}
           //Setting the number of column
           numColumns={1}
           keyExtractor={(item, index) => index.toString()}
           />
+          <View style={styles.totaltextview}> 
+            <Text style={{fontSize:16, fontWeight : '400'}}>Total Amount</Text>
+            <Text style={{fontSize:16, fontWeight : '400', color : '#cf4a08'}}>$ {this.state.totalGrossPrice + this.state.product_fee + Math.round(this.state.grossprice * 0.05)}</Text>
+          </View>            
           <View style={{flexDirection : 'row', justifyContent : 'center', marginTop : 20}}>
             <View style={styles.paymentmethodview}>
                 <Image source={require('../../assets/imgs/visa.png')} ></Image>
@@ -152,8 +152,8 @@ export default class CheckoutPage extends Component{
                 <Image source={require('../../assets/imgs/paypal.png')} ></Image>
             </View>                                     */}
           </View>
-          <View style={{marginLeft : '10%', marginTop : '10%'}}>
-            <Text style={{fontSize:16, fontWeight : '400'}}>Card Number</Text>
+          <View style={{marginLeft : '10%', marginTop : 20}}>
+            <Text style={{fontSize:16, fontWeight : '400', marginBottom : 10}}>Card Number</Text>
             <PaymentCardTextField
               accessible={false}
               style={styles.field}

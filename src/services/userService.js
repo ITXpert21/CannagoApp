@@ -36,6 +36,12 @@ class UserService {
       return addParam;
     }).catch();
   }    
+  getConsumerProfileInfo(uid){
+    var ref = Firebase.database().ref('consumers');
+    return ref.orderByChild('uid').equalTo(uid).once("value").then((snapshot) => {
+      return snapshot;
+    }).catch(err=> console.log(err));
+  } 
 }
 const userService = new UserService();
 export default userService;  
