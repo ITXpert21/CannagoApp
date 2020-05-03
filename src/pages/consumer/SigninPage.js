@@ -7,6 +7,7 @@ import {
 import Icon from 'react-native-vector-icons/FontAwesome';
 import Firebase from '../../config/firebase'
 import Toast from 'react-native-simple-toast';
+import userService from '../../services/userService';
 
 
 export default class SigninPage extends Component{
@@ -19,34 +20,33 @@ export default class SigninPage extends Component{
     };  
   }
 
-  async _storeData(uid) {
+   _storeData= async (uid) =>  {
     try {
-      var userObj = {
-        email : this.state.email,
-        password : this.state.password,
-        uid : uid 
-      }
-     await AsyncStorage.setItem('userInfo', JSON.stringify(userObj));
-      //return jsonOfItem;
 
+      userService.getCurrentUserInfo(uid).then(result =>{
+        var userInfo; 
+        result.forEach(function(consumerInfo){
+          userInfo = consumerInfo.val();
+        });
+         AsyncStorage.setItem('userInfo', JSON.stringify(userInfo));
+         this.setState({isLoading: false});
+         this.props.navigation.navigate('ProductCategoryPage')
+      });
     } catch (error) {
       console.log(error.message);
     }
   }
 
    signin = async () =>  {
-
-
-
     if(this.state.email === '' && this.state.password === '') {
       Toast.showWithGravity('Enter email or password', Toast.LONG , Toast.TOP);
     } else {
       this.setState({isLoading: true});
       Firebase.auth().signInWithEmailAndPassword(this.state.email, this.state.password)
       .then((res) => {
-        this.setState({isLoading: false});
+        
         this._storeData(res.user.uid);
-        this.props.navigation.navigate('ProductCategoryPage')
+        
       })
       .catch((error) => {
         this.setState({isLoading: false});

@@ -31,25 +31,15 @@ export default class ProfilePage extends Component{
     }; 
   }
   UNSAFE_componentWillMount(){
+    this.setState({isLoading : true});
+
     AsyncStorage.getItem('userInfo').then((userinfo)=>{
-      let uid = JSON.parse(userinfo).uid;
-      this.setState({uid : uid});
-      this.getConsumerProfileInfo(uid);
+      this.setState(JSON.parse(userinfo));
+      this.setState({isLoading : false});
+
     });
   } 
 
-  getConsumerProfileInfo = (uid) =>{
-    this.setState({isLoading : true});
-    this.setState({isLoading : true});
-    userService.getConsumerProfileInfo(uid).then(result =>{
-      var consumerInfo;
-      result.forEach(function(profileInfo){
-        consumerInfo = profileInfo.val();
-      });
-      this.setState(consumerInfo);
-      this.setState({isLoading : false});
-    });  
-  }  
   sendMessage = () =>{
     const to = ['contactcannago@gmail.com'] // string or array of email addresses
     email(to, {
