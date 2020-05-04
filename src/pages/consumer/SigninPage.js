@@ -28,6 +28,7 @@ export default class SigninPage extends Component{
         result.forEach(function(consumerInfo){
           userInfo = consumerInfo.val();
         });
+        console.log(userInfo);
          AsyncStorage.setItem('userInfo', JSON.stringify(userInfo));
          this.setState({isLoading: false});
          this.props.navigation.navigate('ProductCategoryPage')

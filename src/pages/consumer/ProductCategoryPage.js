@@ -11,11 +11,14 @@ import {
   Dimensions,
   FlatList,
   ActivityIndicator,
+  Alert,
   View
 } from 'react-native';
 import { SearchBar} from 'react-native-elements';
 import Tabs from '../../components/consumer/tab/Tabs';
 import storeService from '../../services/storeService';
+import userService from '../../services/userService';
+import firebase from 'react-native-firebase';
 
 export  default class ProductCategoryPage extends Component{
  
@@ -24,18 +27,103 @@ export  default class ProductCategoryPage extends Component{
     this.state = {
       selectTab: 'home',
       isLoading : false,
-      isEmptyStore : true
+      isEmptyStore : true,
+      deviceToken : '',
+      
+
     }; 
   }  
 
   UNSAFE_componentWillMount(){
     AsyncStorage.getItem('userInfo').then((userinfo)=>{
-      this.setState({uid : JSON.parse(userinfo).uid})
+      this.setState({uid : JSON.parse(userinfo).uid});
+      this.setState({consumerId : JSON.parse(userinfo).consumerId});
+      this.checkPermission();
+      this.messageListener();
     });
-    this.getStores();
+    
+  }
+  checkPermission = async () => {
+    const enabled = await firebase.messaging().hasPermission();
+
+    if (enabled) {
+        this.getFcmToken();
+    } else {
+        this.requestPermission();
+    }
   }
 
-  getStores = () =>{
+  getFcmToken = async () => {
+    let fcmToken = await AsyncStorage.getItem ('fcmToken');
+    if (!fcmToken) {
+      try {
+        fcmToken = await firebase.messaging().getToken();
+        console.log("111111111111111111==========", fcmToken)
+
+      } catch (e) {
+        console.log ('error ---->>', e);
+      }
+      if (fcmToken) {
+        // user has a device token
+        //await AsyncStorage.setItem ('fcmToken', fcmToken);
+        this.setState({deviceToken : fcmToken});
+        this.getStores();
+
+      }
+    }
+  }
+
+  requestPermission = async () => {
+    try {
+      await firebase.messaging().requestPermission();
+      console.log("User has authorised");
+      this.getFcmToken();
+      // User has authorised
+    } catch (error) {
+        // User has rejected permissions
+    }
+  }
+
+  messageListener = async () => {
+    this.notificationListener = firebase.notifications().onNotification((notification) => {
+        const { title, body } = notification;
+       // alert("onNotification");
+        this.showAlert(title, 'onNotification');
+    });
+  
+    this.notificationOpenedListener = firebase.notifications().onNotificationOpened((notificationOpen) => {
+        const { title, body } = notificationOpen.notification;
+        //alert("onNotificationOpen");
+
+        this.showAlert(title, 'onNotificationOpen');
+    });
+  
+    const notificationOpen = await firebase.notifications().getInitialNotification();
+
+    if (notificationOpen) {
+        const { title, body } = notificationOpen.notification;
+        this.showAlert("title, body");
+    }
+  
+    this.messageListener = firebase.messaging().onMessage((message) => {
+      console.log(JSON.stringify(message));
+    });
+  }
+
+  showAlert = (title, message) => {
+    Alert.alert(
+      title,
+      message,
+      [
+        {text: 'OK', onPress: () => console.log('OK Pressed')},
+      ],
+      {cancelable: false},
+    );
+  } 
+  getStores = async () =>{
+    //puttinig device token to database
+    await userService.updateDeviceToken(this.state.consumerId, this.state.deviceToken);
+
     this.setState({isLoading : true});
     storeService.getStores(this.state.uid).then(result =>{
  

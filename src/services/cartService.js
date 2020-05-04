@@ -41,8 +41,19 @@ class CartService {
     return ref.once("value").then((snapshot) => {
       return snapshot;
     }).catch(err=> console.log(err));
-  }  
+  }
 
+  getDeliveryInfo(cartId){
+    var ref = Firebase.database().ref('carts/' + cartId);
+    return ref.once("value").then((snapshot) => {
+      var consumerRef = Firebase.database().ref('consumers');
+      return consumerRef.orderByChild('uid').equalTo(snapshot.val().cart_uid).once("value").then((consumerInfo) => {
+        return consumerInfo.val();
+      })
+   
+    }).catch(err=> console.log(err));
+
+  }  
   getProductsInCart(uid){
     var ref = Firebase.database().ref('carts');
     return ref.orderByChild('cart_uid').equalTo(uid).once("value").then((snapshot) => {

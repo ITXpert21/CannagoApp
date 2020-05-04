@@ -10,11 +10,13 @@ import {
   Image,
   View,
   ActivityIndicator,
+  AsyncStorage,
   TouchableOpacity
 } from 'react-native';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import Firebase from '../../config/firebase';
 import Toast from 'react-native-simple-toast';
+import userService from '../../services/userService';
 
 export default class SigninDriverPage extends Component{
   constructor(props){
@@ -36,7 +38,6 @@ export default class SigninDriverPage extends Component{
       .then((res) => {
         this.setState({isLoading: false});
         this._storeData(res.user.uid);
-        this.props.navigation.navigate('ProfileDriverPage');
       })
       .catch((error) => {
         this.setState({isLoading: false});
@@ -44,20 +45,23 @@ export default class SigninDriverPage extends Component{
       })
     }
   }  
-  async _storeData(uid) {
+  _storeData= async (uid) =>  {
     try {
-      var userObj = {
-        email : this.state.email,
-        password : this.state.password,
-        uid : uid 
-      }
-     await AsyncStorage.setItem('userInfo', JSON.stringify(userObj));
-      //return jsonOfItem;
 
+      userService.getCurrentDriverInfo(uid).then(result =>{
+        var userInfo; 
+        result.forEach(function(driverInfo){
+          userInfo = driverInfo.val();
+        });
+        
+         AsyncStorage.setItem('userInfo', JSON.stringify(userInfo));
+         this.setState({isLoading: false});
+         this.props.navigation.navigate('ProfileDriverPage');
+      });
     } catch (error) {
       console.log(error.message);
     }
-  } 
+  }
   render(){
     return (
       <SafeAreaView style={styles.container}>

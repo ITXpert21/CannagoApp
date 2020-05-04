@@ -9,6 +9,7 @@ import {
   Image, 
   Platform,
   AsyncStorage,
+  
   ActivityIndicator,
   View
 } from 'react-native';
@@ -26,11 +27,9 @@ import RNFetchBlob from 'react-native-fetch-blob';
 
 // import ImagePicker from 'react-native-image-crop-picker';
 const licenseKey = Platform.select({
-  // iOS license key for applicationID: org.reactjs.native.example.BlinkIDReactNative
-  ios: 'sRwAAAEbY29tLmNhbm5hZ29hcHAuY2FubmFncm93ZGV2dDpWAgbXAyPGVFY7d9K7vU3S/Bz3sWPS2/9SVuwSe7zWUbUiTBvttlolYjKiQGXsKTi7v7Nrd4GCzKduEje2e2Kl0UKYRPaB6HJxGCrBn2GmFRrT7In12dU7K1ZuFXIwhp78tKxMU0FmgWd5xN/R/NZIRGgKtKTlmYjK8xF42oypkXwUHg6Os5SYLtwkIGqYfXaUyCQg5R1o/tK4sAykUdU4Vbzc/R2nEDwqdwVdxf7WbBOnIqjgKy1uHsk5WzUToQfJG+Gq3ptdbOs1MWhX',
-  // android license key for applicationID: com.blinkidreactnative
-  android: 'sRwAAAAbY29tLmNhbm5hZ29hcHAuY2FubmFncm93ZGV2Smx+Aa0uoDFwpY2fouvbI6e6UbS50wdF3h+s0PFw8HPKMeTzmqydvUHi5yA24jg9Ivk029Oo7JyV74PZAPL3DRSc4Bg8avOT7glbyadUKZiENiB2Gpew+18TuRyB66xcF+XAUQbcbvfiN6xtpOEyrvhuN2p0d9OisP94nkepfMXJIdluKFdWEexQ+5P+XIK/0Z2O7xX3a7FM3nePR9ZdFZXnTEkKuzYwrq2q4AZvLPqPg1/dTvECYghdryG/Aa3JV52mYp8FlwE0t8bIWlgc'
-});
+      ios: "sRwAAAEWb3JnLmNhbm5hZ29hcHAuY2FubmFnb7oKGGEMFG/Mig+ZqM4BkpkblPOjJvekNhOEZoSbFUDXusSO6GDEuDALAYLFfzb4+X6QtmcL8n1AjC2HhxKhNPKzmMgtB5y6MYoh9zKDDvq9v35Nwxd9Qzp3smjqsn7jOstfw3FINg6odjcBJ6to2rbe9uOYTjzmKvAR8Ro/2AHZCtUh96zVTe1QLvMGfrfwRDReLMwFU3A2XL2kXOmebFy0entIdZGpkfx549Ptm+hmDZtRgBVJ1nrFIQeRRCew+SSqz3U3jsV9kjpQ3Ow9Ug==" ,
+      android: "sRwAAAAWb3JnLmNhbm5hZ29hcHAuY2FubmFnb0FNmcPu1wsl0gJydDDVDqzLo1nmtvd4XGQqhQSoSuQxzG5ilihCQZN0BqSgJMsgFYydv+i6fqnbuB298M6hU1NEt9k9iXniaMwWza+JmOyC1VtzF97k+enZpSUOzTJefDlglaWuPEIzIaI1Ukq0Pl1iP14wCToPK+mGRvXqbGYFJGpu8108GhhchRMNAec33/IryN9kiM58Y9g/2YaVXSpjXDVoKmGAbMJHxeJd7qOEYnO38xRJ2CsZu7LibKsUm7dcd4YMXJef3eISiOzlkw==" 
+  });
 
 var renderIf = function(condition, content) {
   if (condition) {
@@ -59,7 +58,7 @@ export default class SignupPage extends Component{
         phonenumber : '',
         license_number : '',
         usertype : 0,
-
+        deviceToken : '',
         validated : true,
         isChecked : false,
         isLoading: false,
@@ -67,6 +66,9 @@ export default class SignupPage extends Component{
         uploading : false
     };    
   } 
+  UNSAFE_componentWillMount(){
+  }    
+ 
   chooseFile = () => {
     var options = {
       title: 'Select User Photo',
@@ -100,8 +102,6 @@ export default class SignupPage extends Component{
     });
   
   }; 
-
-
   uploadImage = (uid, uri, mime = 'application/octet-stream') => {
 
     return new Promise((resolve, reject) => {
@@ -168,8 +168,10 @@ export default class SignupPage extends Component{
       password : this.state.password,
       phonenumber : this.state.phonenumber,
       license_number : this.state.license_number,
-      token : token,
+      deviceToken : '',
       usertype : 'consumer', 
+      updateId : '',
+      active : 'active'
     };
 
     Firebase.auth().createUserWithEmailAndPassword(this.state.email, this.state.password)
@@ -188,7 +190,7 @@ export default class SignupPage extends Component{
           userParam.photo_url = url;
           userService.registerConsumer(userParam).then(response =>{
             this.setState({isLoading: false, });
-            this._storeData(userParam);
+            this._storeData(response);
             this.props.navigation.navigate('ProductCategoryPage')
           });   
         }).catch(error => console.log(error));

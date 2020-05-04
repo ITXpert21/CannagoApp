@@ -1,0 +1,125 @@
+[debug] [2020-05-04T16:11:10.189Z] ----------------------------------------------------------------------
+[debug] [2020-05-04T16:11:10.192Z] Command:       /usr/local/bin/node /usr/local/bin/firebase serve
+[debug] [2020-05-04T16:11:10.193Z] CLI Version:   8.1.1
+[debug] [2020-05-04T16:11:10.193Z] Platform:      darwin
+[debug] [2020-05-04T16:11:10.193Z] Node Version:  v12.16.1
+[debug] [2020-05-04T16:11:10.194Z] Time:          Mon May 04 2020 12:11:10 GMT-0400 (Eastern Daylight Time)
+[debug] [2020-05-04T16:11:10.194Z] ----------------------------------------------------------------------
+[debug] [2020-05-04T16:11:10.194Z] 
+[debug] [2020-05-04T16:11:10.225Z] > command requires scopes: ["email","openid","https://www.googleapis.com/auth/cloudplatformprojects.readonly","https://www.googleapis.com/auth/firebase","https://www.googleapis.com/auth/cloud-platform"]
+[debug] [2020-05-04T16:11:10.226Z] > authorizing via signed-in user
+[debug] [2020-05-04T16:11:10.227Z] [iam] checking project cannago-ba078 for permissions ["firebase.projects.get"]
+[debug] [2020-05-04T16:11:10.236Z] > refreshing access token with scopes: ["email","https://www.googleapis.com/auth/cloud-platform","https://www.googleapis.com/auth/cloudplatformprojects.readonly","https://www.googleapis.com/auth/firebase","openid"]
+[debug] [2020-05-04T16:11:10.237Z] >>> HTTP REQUEST POST https://www.googleapis.com/oauth2/v3/token  
+ <request body omitted>
+[debug] [2020-05-04T16:11:11.478Z] <<< HTTP RESPONSE 200 {"content-type":"application/json; charset=utf-8","vary":"X-Origin, Referer, Origin,Accept-Encoding","date":"Mon, 04 May 2020 16:11:12 GMT","server":"scaffolding on HTTPServer2","cache-control":"private","x-xss-protection":"0","x-frame-options":"SAMEORIGIN","x-content-type-options":"nosniff","alt-svc":"h3-Q050=\":443\"; ma=2592000,h3-Q049=\":443\"; ma=2592000,h3-Q048=\":443\"; ma=2592000,h3-Q046=\":443\"; ma=2592000,h3-Q043=\":443\"; ma=2592000,quic=\":443\"; ma=2592000; v=\"46,43\"","accept-ranges":"none","transfer-encoding":"chunked"}
+[debug] [2020-05-04T16:11:11.499Z] >>> HTTP REQUEST POST https://cloudresourcemanager.googleapis.com/v1/projects/cannago-ba078:testIamPermissions  
+ {"permissions":["firebase.projects.get"]}
+[debug] [2020-05-04T16:11:16.895Z] <<< HTTP RESPONSE 200 {"content-type":"application/json; charset=UTF-8","vary":"X-Origin, Referer, Origin,Accept-Encoding","date":"Mon, 04 May 2020 16:11:18 GMT","server":"ESF","cache-control":"private","x-xss-protection":"0","x-frame-options":"SAMEORIGIN","x-content-type-options":"nosniff","server-timing":"gfet4t7; dur=845","alt-svc":"h3-27=\":443\"; ma=2592000,h3-25=\":443\"; ma=2592000,h3-Q050=\":443\"; ma=2592000,h3-Q049=\":443\"; ma=2592000,h3-Q048=\":443\"; ma=2592000,h3-Q046=\":443\"; ma=2592000,h3-Q043=\":443\"; ma=2592000,quic=\":443\"; ma=2592000; v=\"46,43\"","accept-ranges":"none","transfer-encoding":"chunked"}
+[debug] [2020-05-04T16:11:16.897Z] >>> HTTP REQUEST GET https://firebase.googleapis.com/v1beta1/projects/cannago-ba078  
+ 
+[debug] [2020-05-04T16:11:22.691Z] <<< HTTP RESPONSE 200 {"content-type":"application/json; charset=UTF-8","vary":"X-Origin, Referer, Origin,Accept-Encoding","date":"Mon, 04 May 2020 16:11:24 GMT","server":"ESF","cache-control":"private","x-xss-protection":"0","x-frame-options":"SAMEORIGIN","x-content-type-options":"nosniff","alt-svc":"h3-Q050=\":443\"; ma=2592000,h3-Q049=\":443\"; ma=2592000,h3-Q048=\":443\"; ma=2592000,h3-Q046=\":443\"; ma=2592000,h3-Q043=\":443\"; ma=2592000,quic=\":443\"; ma=2592000; v=\"46,43\"","accept-ranges":"none","transfer-encoding":"chunked"}
+[info] 
+[info] === Serving from '/Volumes/Work/ReactNative/CannagoApp'...
+[info] 
+[warn] ⚠  Your requested "node" version "8" doesn't match your global version "12"
+[info] ✔  functions: functions emulator started at http://localhost:5000
+[info] i  functions: Watching "/Volumes/Work/ReactNative/CannagoApp/functions" for Cloud Functions...
+[debug] [2020-05-04T16:11:22.765Z] [worker-pool] addWorker(~diagnostic~) 
+[debug] [2020-05-04T16:11:22.765Z] [worker-pool] Adding worker with key ~diagnostic~, total=1 
+[debug] [2020-05-04T16:11:22.766Z] [worker-pool] submitWork(triggerId=) 
+[debug] [2020-05-04T16:11:22.767Z] [worker-~diagnostic~-8c5d4f85-4cfd-4ae6-aced-e06499f6a1d3]: Assigning socketPath: /var/folders/sn/1y7ql2zd1hq5x2301759c8dc0000gn/T/fire_emu_63212.sock 
+[debug] [2020-05-04T16:11:22.768Z] [worker-~diagnostic~-8c5d4f85-4cfd-4ae6-aced-e06499f6a1d3]: BUSY 
+[debug] [2020-05-04T16:11:23.374Z] [runtime-status] [63212] Functions runtime initialized. {"cwd":"/Volumes/Work/ReactNative/CannagoApp/functions","node_version":"12.16.1"} 
+[debug] [2020-05-04T16:11:23.389Z] [runtime-status] [63212] Disabled runtime features: undefined 
+[debug] [2020-05-04T16:11:23.394Z] [runtime-status] [63212] Resolved module firebase-admin {"declared":true,"installed":true,"version":"8.11.0","resolution":"/Volumes/Work/ReactNative/CannagoApp/functions/node_modules/firebase-admin/lib/index.js"} 
+[debug] [2020-05-04T16:11:23.397Z] [runtime-status] [63212] Resolved module firebase-functions {"declared":true,"installed":true,"version":"3.6.1","resolution":"/Volumes/Work/ReactNative/CannagoApp/functions/node_modules/firebase-functions/lib/index.js"} 
+[debug] [2020-05-04T16:11:23.400Z] [runtime-status] [63212] Outgoing network have been stubbed. [{"name":"http","status":"mocked"},{"name":"http","status":"mocked"},{"name":"https","status":"mocked"},{"name":"https","status":"mocked"},{"name":"net","status":"mocked"}] 
+[debug] [2020-05-04T16:11:23.477Z] [runtime-status] [63212] Checked functions.config() {"config":{}} 
+[debug] [2020-05-04T16:11:23.479Z] [runtime-status] [63212] Resolved module firebase-functions {"declared":true,"installed":true,"version":"3.6.1","resolution":"/Volumes/Work/ReactNative/CannagoApp/functions/node_modules/firebase-functions/lib/index.js"} 
+[debug] [2020-05-04T16:11:23.482Z] [runtime-status] [63212] Resolved module firebase-admin {"declared":true,"installed":true,"version":"8.11.0","resolution":"/Volumes/Work/ReactNative/CannagoApp/functions/node_modules/firebase-admin/lib/index.js"} 
+[debug] [2020-05-04T16:11:23.482Z] [runtime-status] [63212] Resolved module firebase-functions {"declared":true,"installed":true,"version":"3.6.1","resolution":"/Volumes/Work/ReactNative/CannagoApp/functions/node_modules/firebase-functions/lib/index.js"} 
+[debug] [2020-05-04T16:11:23.482Z] [runtime-status] [63212] firebase-admin has been stubbed. {"adminResolution":{"declared":true,"installed":true,"version":"8.11.0","resolution":"/Volumes/Work/ReactNative/CannagoApp/functions/node_modules/firebase-admin/lib/index.js"}} 
+[debug] [2020-05-04T16:11:23.582Z] [runtime-status] [63212] initializeApp(DEFAULT) {"databaseURL":"https://cannago-ba078.firebaseio.com","storageBucket":"cannago-ba078.appspot.com","projectId":"cannago-ba078","credential":{"implicit":false,"projectId":"cannago-ba078","privateKey":"-----BEGIN PRIVATE KEY-----\nMIIEvQIBADANBgkqhkiG9w0BAQEFAASCBKcwggSjAgEAAoIBAQDScQYRWZSptHCQ\nyLnsY8q2+X/ZBE4GpH3oJm9sxA0sQsa1ER7f8LnHrAGsIQC1EA7qW4CZZMq3qCcr\nsNv7WF8pS+LwS0mNc+2xSlfmRuLxva4nUPSE3e3waW09C03ZD9gbC1Rkb6qkVBjF\n+6J3BBMjrVidZx8S05s2bRNINoSUG42F5vaW1ISdXuQMwSejDJX2mtU6HJt9QpNy\nALvNYy/uzN133ossiT5AUTNXVlpBWdfFTRsVi3leEs8TLGcQcZ0f3WuXPQpqTXls\nZ5D9fp6EaTRfJZc/xosabIjRlOqTH/ePe2O1nUJotYXZ6DJZ6p5MoS7UO3B/ARti\n8cRNCw+fAgMBAAECggEAZFAMHGkfPGYO4nVMayqGjwIPt1sd9nyip+7qXmZ2AQsz\nvUwT85vEczHC+lIhDC5DbeOAQZ6SI0m8ok8EDaPqeLz7yJ+ayBriywgtLk/MDn/k\nbElixZMkwN0AfYDN8xJiaUHVUKsKJJsR1A5HO4Rtuyv+ecmWPlswOZl0/489U3uR\nihw1HAf5J06fHNtDjWWeDqrodcBNTXa+fwDdNHAc+7pZjuGN2i5ZogWTTZeG16DZ\noU9OuIsBJH4iEeZYuMttRCT+bQlQBNl2B8vbVKhajUZM62AZ7wEmetuld+BFU0fx\n6NFgNONIQWLayPR0XwAENAIjb2JjqEEWCcyJKe8GgQKBgQDo1ON44KouuA6sVJjd\nnbxq7vGxzTB52EVDIDdFOq5xwMxv4cpSxrup2rnopZmMFhO8Sb2y2zRb3acyUTJx\nXluPPlOrrWf06Q/YKZ31H8v8DpNQEbj0bxF0va1/egNpYkI3nHgh+Rob7wRbzUtA\ndo7obUBKzbmEMcO1l5KeJr4aOQKBgQDnYcYSEKhstym/p/IBLnktrsHtEsZ6CJpb\nFttCm8ZdtsJNYz8v2Dso4V55zcXQ3SHo2t9SIuwcyN3j0jsq3pC6KxMSCidynF6E\nE+YZuy9D0MGNGRGZcqxjjjltvxnzn8+czfI0HWB+eumCUsPoWqLQQlFK7/lHAss2\nHGEGoRZYlwKBgB+wmiVhrsgdFSIvgX7ocTS8wPjKTMbIwOSaBevOSOACtdCkkr0h\nf3lm49becz+14YnHH6KwYzf9uzwGAS+dAClG+mxrdbLH5fgt8enjIgh0k2hagSoD\n1ARnrK2lFcHKNekLyu4U0ZDrv1QfZRapDFpmRFHqHk332ANnVfVgoI9BAoGBAKsw\ng8NJ39LPkWvjbgHByJYr/f7RLVeMlede+cpGRnV/ijKHg3B6owqT87parEjj0vrd\nNO0oOVjypHiySmRlVt7mj62BJb5+Qs+liVDwVP/vq8QhEAxf83uU9phkE2dUjd6N\n4Oz97y6k8a8iXR/EL0G2Tz8KXXxUbNUUGhU1ibrxAoGACSCur/z9dJbQMIpF1uO9\nZHAzskEjuw6sZYG/zuRKnvlERcTZ4Mkud/Id3QZXccORWH8VesavpnTHodN2VdRW\nsD5eO0xu8SoTqe73eXs4xO+qV+2nb4wLXFsBOfFRhLOSYBBBfjQcm23Pzm/9t/OA\nGvFdb02ucEyHd6pCzFvZLK0=\n-----END PRIVATE KEY-----\n","clientEmail":"firebase-adminsdk-qavan@cannago-ba078.iam.gserviceaccount.com","httpClient":{"retry":{"maxRetries":4,"statusCodes":[503],"ioErrorCodes":["ECONNRESET","ETIMEDOUT"],"backOffFactor":0.5,"maxDelayInMillis":60000}}}} 
+[info] ✔  functions[payWithStripe]: http function initialized (http://localhost:5000/cannago-ba078/us-central1/payWithStripe).
+[debug] [2020-05-04T16:11:23.650Z] [worker-~diagnostic~-8c5d4f85-4cfd-4ae6-aced-e06499f6a1d3]: IDLE 
+[debug] [2020-05-04T16:11:59.633Z] [work-queue] {"queueLength":1,"workRunningCount":0}
+[debug] [2020-05-04T16:11:59.634Z] [work-queue] {"queueLength":0,"workRunningCount":1}
+[debug] [2020-05-04T16:11:59.638Z] Accepted request POST /cannago-ba078/us-central1/payWithStripe --> payWithStripe
+[debug] [2020-05-04T16:11:59.653Z] [worker-pool] addWorker(payWithStripe) 
+[debug] [2020-05-04T16:11:59.653Z] [worker-pool] Adding worker with key payWithStripe, total=1 
+[debug] [2020-05-04T16:11:59.653Z] [worker-pool] submitWork(triggerId=payWithStripe) 
+[debug] [2020-05-04T16:11:59.654Z] [worker-payWithStripe-d3087446-7e66-478a-ad87-66e1389cd223]: Assigning socketPath: /var/folders/sn/1y7ql2zd1hq5x2301759c8dc0000gn/T/fire_emu_63251.sock 
+[debug] [2020-05-04T16:11:59.654Z] [worker-payWithStripe-d3087446-7e66-478a-ad87-66e1389cd223]: BUSY 
+[debug] [2020-05-04T16:12:00.250Z] [runtime-status] [63251] Functions runtime initialized. {"cwd":"/Volumes/Work/ReactNative/CannagoApp/functions","node_version":"12.16.1"} 
+[debug] [2020-05-04T16:12:00.264Z] [runtime-status] [63251] Disabled runtime features: undefined 
+[debug] [2020-05-04T16:12:00.299Z] [runtime-status] [63251] Resolved module firebase-admin {"declared":true,"installed":true,"version":"8.11.0","resolution":"/Volumes/Work/ReactNative/CannagoApp/functions/node_modules/firebase-admin/lib/index.js"} 
+[debug] [2020-05-04T16:12:00.302Z] [runtime-status] [63251] Resolved module firebase-functions {"declared":true,"installed":true,"version":"3.6.1","resolution":"/Volumes/Work/ReactNative/CannagoApp/functions/node_modules/firebase-functions/lib/index.js"} 
+[debug] [2020-05-04T16:12:00.307Z] [runtime-status] [63251] Outgoing network have been stubbed. [{"name":"http","status":"mocked"},{"name":"http","status":"mocked"},{"name":"https","status":"mocked"},{"name":"https","status":"mocked"},{"name":"net","status":"mocked"}] 
+[debug] [2020-05-04T16:12:00.373Z] [runtime-status] [63251] Checked functions.config() {"config":{}} 
+[debug] [2020-05-04T16:12:00.384Z] [runtime-status] [63251] Resolved module firebase-functions {"declared":true,"installed":true,"version":"3.6.1","resolution":"/Volumes/Work/ReactNative/CannagoApp/functions/node_modules/firebase-functions/lib/index.js"} 
+[debug] [2020-05-04T16:12:00.389Z] [runtime-status] [63251] Resolved module firebase-admin {"declared":true,"installed":true,"version":"8.11.0","resolution":"/Volumes/Work/ReactNative/CannagoApp/functions/node_modules/firebase-admin/lib/index.js"} 
+[debug] [2020-05-04T16:12:00.393Z] [runtime-status] [63251] Resolved module firebase-functions {"declared":true,"installed":true,"version":"3.6.1","resolution":"/Volumes/Work/ReactNative/CannagoApp/functions/node_modules/firebase-functions/lib/index.js"} 
+[debug] [2020-05-04T16:12:00.394Z] [runtime-status] [63251] firebase-admin has been stubbed. {"adminResolution":{"declared":true,"installed":true,"version":"8.11.0","resolution":"/Volumes/Work/ReactNative/CannagoApp/functions/node_modules/firebase-admin/lib/index.js"}} 
+[debug] [2020-05-04T16:12:00.511Z] [runtime-status] [63251] initializeApp(DEFAULT) {"databaseURL":"https://cannago-ba078.firebaseio.com","storageBucket":"cannago-ba078.appspot.com","projectId":"cannago-ba078","credential":{"implicit":false,"projectId":"cannago-ba078","privateKey":"-----BEGIN PRIVATE KEY-----\nMIIEvQIBADANBgkqhkiG9w0BAQEFAASCBKcwggSjAgEAAoIBAQDScQYRWZSptHCQ\nyLnsY8q2+X/ZBE4GpH3oJm9sxA0sQsa1ER7f8LnHrAGsIQC1EA7qW4CZZMq3qCcr\nsNv7WF8pS+LwS0mNc+2xSlfmRuLxva4nUPSE3e3waW09C03ZD9gbC1Rkb6qkVBjF\n+6J3BBMjrVidZx8S05s2bRNINoSUG42F5vaW1ISdXuQMwSejDJX2mtU6HJt9QpNy\nALvNYy/uzN133ossiT5AUTNXVlpBWdfFTRsVi3leEs8TLGcQcZ0f3WuXPQpqTXls\nZ5D9fp6EaTRfJZc/xosabIjRlOqTH/ePe2O1nUJotYXZ6DJZ6p5MoS7UO3B/ARti\n8cRNCw+fAgMBAAECggEAZFAMHGkfPGYO4nVMayqGjwIPt1sd9nyip+7qXmZ2AQsz\nvUwT85vEczHC+lIhDC5DbeOAQZ6SI0m8ok8EDaPqeLz7yJ+ayBriywgtLk/MDn/k\nbElixZMkwN0AfYDN8xJiaUHVUKsKJJsR1A5HO4Rtuyv+ecmWPlswOZl0/489U3uR\nihw1HAf5J06fHNtDjWWeDqrodcBNTXa+fwDdNHAc+7pZjuGN2i5ZogWTTZeG16DZ\noU9OuIsBJH4iEeZYuMttRCT+bQlQBNl2B8vbVKhajUZM62AZ7wEmetuld+BFU0fx\n6NFgNONIQWLayPR0XwAENAIjb2JjqEEWCcyJKe8GgQKBgQDo1ON44KouuA6sVJjd\nnbxq7vGxzTB52EVDIDdFOq5xwMxv4cpSxrup2rnopZmMFhO8Sb2y2zRb3acyUTJx\nXluPPlOrrWf06Q/YKZ31H8v8DpNQEbj0bxF0va1/egNpYkI3nHgh+Rob7wRbzUtA\ndo7obUBKzbmEMcO1l5KeJr4aOQKBgQDnYcYSEKhstym/p/IBLnktrsHtEsZ6CJpb\nFttCm8ZdtsJNYz8v2Dso4V55zcXQ3SHo2t9SIuwcyN3j0jsq3pC6KxMSCidynF6E\nE+YZuy9D0MGNGRGZcqxjjjltvxnzn8+czfI0HWB+eumCUsPoWqLQQlFK7/lHAss2\nHGEGoRZYlwKBgB+wmiVhrsgdFSIvgX7ocTS8wPjKTMbIwOSaBevOSOACtdCkkr0h\nf3lm49becz+14YnHH6KwYzf9uzwGAS+dAClG+mxrdbLH5fgt8enjIgh0k2hagSoD\n1ARnrK2lFcHKNekLyu4U0ZDrv1QfZRapDFpmRFHqHk332ANnVfVgoI9BAoGBAKsw\ng8NJ39LPkWvjbgHByJYr/f7RLVeMlede+cpGRnV/ijKHg3B6owqT87parEjj0vrd\nNO0oOVjypHiySmRlVt7mj62BJb5+Qs+liVDwVP/vq8QhEAxf83uU9phkE2dUjd6N\n4Oz97y6k8a8iXR/EL0G2Tz8KXXxUbNUUGhU1ibrxAoGACSCur/z9dJbQMIpF1uO9\nZHAzskEjuw6sZYG/zuRKnvlERcTZ4Mkud/Id3QZXccORWH8VesavpnTHodN2VdRW\nsD5eO0xu8SoTqe73eXs4xO+qV+2nb4wLXFsBOfFRhLOSYBBBfjQcm23Pzm/9t/OA\nGvFdb02ucEyHd6pCzFvZLK0=\n-----END PRIVATE KEY-----\n","clientEmail":"firebase-adminsdk-qavan@cannago-ba078.iam.gserviceaccount.com","httpClient":{"retry":{"maxRetries":4,"statusCodes":[503],"ioErrorCodes":["ECONNRESET","ETIMEDOUT"],"backOffFactor":0.5,"maxDelayInMillis":60000}}}} 
+[debug] [2020-05-04T16:12:00.558Z] [runtime-status] [63251] Trigger "payWithStripe" has been found, beginning invocation! 
+[info] i  functions: Beginning execution of "payWithStripe"
+[debug] [2020-05-04T16:12:00.559Z] [runtime-status] [63251] triggerDefinition {"httpsTrigger":{},"name":"payWithStripe","entryPoint":"payWithStripe"} 
+[debug] [2020-05-04T16:12:00.559Z] [runtime-status] [63251] Running payWithStripe in mode HTTPS 
+[debug] [2020-05-04T16:12:00.564Z] [runtime-status] [63251] Attempting to listen to socketPath: /var/folders/sn/1y7ql2zd1hq5x2301759c8dc0000gn/T/fire_emu_63251.sock 
+[debug] [2020-05-04T16:12:00.570Z] [functions] Runtime ready! Sending request! 
+[debug] [2020-05-04T16:12:00.657Z] [runtime-status] [63251] Ephemeral server handling POST request 
+[warn] ⚠  functions: The Realtime Database emulator is not running, so calls to Realtime Database will affect production.
+[info] >  -M6UiuqwN6rdSflS7A2J {"user":"-M6UiuqwN6rdSflS7A2J"}
+[debug] [2020-05-04T16:12:04.480Z] [runtime-status] [63251] Ephemeral server survived. 
+[info] i  functions: Finished "payWithStripe" in ~3s
+[debug] [2020-05-04T16:12:04.482Z] [worker-payWithStripe-d3087446-7e66-478a-ad87-66e1389cd223]: IDLE 
+[debug] [2020-05-04T16:12:04.494Z] [work-queue] {"queueLength":0,"workRunningCount":0}
+[info] >  12121212121212 { {"user":"12121212121212 {"}
+[info] >    deviceToken: 'cddxUOZgwBQ:APA91bE_l0LJ-g7jKI3xbr8x2j_8Xip12ulviuD590M7y0Uga9g6RxASrOacK61ZqUZvRSGwiME3SkMtHq7mpZYmmlOKG0rDfJ44S9_tXLqbPoSV6QvZyXwp26nAnITXmso4bRV9h9j9', {"user":"  deviceToken: 'cddxUOZgwBQ:APA91bE_l0LJ-g7jKI3xbr8x2j_8Xip12ulviuD590M7y0Uga9g6RxASrOacK61ZqUZvRSGwiME3SkMtHq7mpZYmmlOKG0rDfJ44S9_tXLqbPoSV6QvZyXwp26nAnITXmso4bRV9h9j9',"}
+[info] >    driverId: '-M6UJ6OE4YTHP58ez7_X', {"user":"  driverId: '-M6UJ6OE4YTHP58ez7_X',"}
+[info] >    owner_info: { {"user":"  owner_info: {"}
+[info] >      address: '123W STATEST\nBOISEID 8AV*m\\', {"user":"    address: '123W STATEST\\nBOISEID 8AV*m\\\\',"}
+[info] >      email: 'Driver@123.com', {"user":"    email: 'Driver@123.com',"}
+[info] >      first_name: 'STANLEYSAMPLE', {"user":"    first_name: 'STANLEYSAMPLE',"}
+[info] >      last_name: '', {"user":"    last_name: '',"}
+[info] >      license_number: 'TC100001G', {"user":"    license_number: 'TC100001G',"}
+[info] >      password: '123456', {"user":"    password: '123456',"}
+[info] >      phonenumber: '123456', {"user":"    phonenumber: '123456',"}
+[info] >      zipcode: '12344' {"user":"    zipcode: '12344'"}
+[info] >    }, {"user":"  },"}
+[info] >    photo_url: 'https://firebasestorage.googleapis.com/v0/b/cannago-ba078.appspot.com/o/drivers%2FdriverImage%2FNXPcVUcmRdaCdDy5YPpDyeFSTH12.jpg?alt=media&token=2fe27ded-9d93-47fc-8899-d7a9dc48580f', {"user":"  photo_url: 'https://firebasestorage.googleapis.com/v0/b/cannago-ba078.appspot.com/o/drivers%2FdriverImage%2FNXPcVUcmRdaCdDy5YPpDyeFSTH12.jpg?alt=media&token=2fe27ded-9d93-47fc-8899-d7a9dc48580f',"}
+[info] >    tax_info: { agreement: 'Aaa', companyname: 'Aaa' }, {"user":"  tax_info: { agreement: 'Aaa', companyname: 'Aaa' },"}
+[info] >    uid: 'NXPcVUcmRdaCdDy5YPpDyeFSTH12', {"user":"  uid: 'NXPcVUcmRdaCdDy5YPpDyeFSTH12',"}
+[info] >    usertype: 'driver', {"user":"  usertype: 'driver',"}
+[info] >    vechicle_info: { {"user":"  vechicle_info: {"}
+[info] >      vechicle_color: 'Red', {"user":"    vechicle_color: 'Red',"}
+[info] >      vechicle_model: 'Aaaaa', {"user":"    vechicle_model: 'Aaaaa',"}
+[info] >      vechicle_name: 'Aaaa', {"user":"    vechicle_name: 'Aaaa',"}
+[info] >      vechicle_number: '123446' {"user":"    vechicle_number: '123446'"}
+[info] >    } {"user":"  }"}
+[info] >  } {"user":"}"}
+[info] >  12121212121212 { {"user":"12121212121212 {"}
+[info] >    deviceToken: 'ekgTbjXIaQ4:APA91bHYo963rVUhDPvjYLjX-LHXg8ZLlY0ZGfUB9ZmLT5WL-bxfODr1-P119Wb_Ork33_sRongOdol8-XrkMygvaJeK70G82DgZmFu78SkHnjmjz0c85DnBoIN8Ms_IvbbhTCLmlSDb', {"user":"  deviceToken: 'ekgTbjXIaQ4:APA91bHYo963rVUhDPvjYLjX-LHXg8ZLlY0ZGfUB9ZmLT5WL-bxfODr1-P119Wb_Ork33_sRongOdol8-XrkMygvaJeK70G82DgZmFu78SkHnjmjz0c85DnBoIN8Ms_IvbbhTCLmlSDb',"}
+[info] >    driverId: '-M6UJ6OE4YTHP58ez7_X', {"user":"  driverId: '-M6UJ6OE4YTHP58ez7_X',"}
+[info] >    owner_info: { {"user":"  owner_info: {"}
+[info] >      address: '123W STATEST\nBOISEID 8AV*m\\', {"user":"    address: '123W STATEST\\nBOISEID 8AV*m\\\\',"}
+[info] >      email: 'Driver@123.com', {"user":"    email: 'Driver@123.com',"}
+[info] >      first_name: 'STANLEYSAMPLE', {"user":"    first_name: 'STANLEYSAMPLE',"}
+[info] >      last_name: '', {"user":"    last_name: '',"}
+[info] >      license_number: 'TC100001G', {"user":"    license_number: 'TC100001G',"}
+[info] >      password: '123456', {"user":"    password: '123456',"}
+[info] >      phonenumber: '123456', {"user":"    phonenumber: '123456',"}
+[info] >      zipcode: '12344' {"user":"    zipcode: '12344'"}
+[info] >    }, {"user":"  },"}
+[info] >    photo_url: 'https://firebasestorage.googleapis.com/v0/b/cannago-ba078.appspot.com/o/drivers%2FdriverImage%2FNXPcVUcmRdaCdDy5YPpDyeFSTH12.jpg?alt=media&token=2fe27ded-9d93-47fc-8899-d7a9dc48580f', {"user":"  photo_url: 'https://firebasestorage.googleapis.com/v0/b/cannago-ba078.appspot.com/o/drivers%2FdriverImage%2FNXPcVUcmRdaCdDy5YPpDyeFSTH12.jpg?alt=media&token=2fe27ded-9d93-47fc-8899-d7a9dc48580f',"}
+[info] >    tax_info: { agreement: 'Aaa', companyname: 'Aaa' }, {"user":"  tax_info: { agreement: 'Aaa', companyname: 'Aaa' },"}
+[info] >    uid: 'NXPcVUcmRdaCdDy5YPpDyeFSTH12', {"user":"  uid: 'NXPcVUcmRdaCdDy5YPpDyeFSTH12',"}
+[info] >    usertype: 'driver', {"user":"  usertype: 'driver',"}
+[info] >    vechicle_info: { {"user":"  vechicle_info: {"}
+[info] >      vechicle_color: 'Red', {"user":"    vechicle_color: 'Red',"}
+[info] >      vechicle_model: 'Aaaaa', {"user":"    vechicle_model: 'Aaaaa',"}
+[info] >      vechicle_name: 'Aaaa', {"user":"    vechicle_name: 'Aaaa',"}
+[info] >      vechicle_number: '123446' {"user":"    vechicle_number: '123446'"}
+[info] >    } {"user":"  }"}
+[info] >  } {"user":"}"}

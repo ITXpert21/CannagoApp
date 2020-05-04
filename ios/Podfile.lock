@@ -3,7 +3,10 @@ PODS:
     - PPBlinkID (~> 5.4.0)
     - React
   - boost-for-react-native (1.63.0)
+  - Crashlytics (3.14.0):
+    - Fabric (~> 1.10.2)
   - DoubleConversion (1.1.6)
+  - Fabric (1.10.2)
   - FBLazyVector (0.61.5)
   - FBReactNativeSpec (0.61.5):
     - Folly (= 2018.10.22.00)
@@ -299,10 +302,6 @@ PODS:
   - React-jsinspector (0.61.5)
   - react-native-fetch-blob (0.10.6):
     - React-Core
-  - react-native-firebase-push-notifications (0.0.8):
-    - Firebase/Core (~> 6.13.0)
-    - Firebase/Messaging (~> 6.13.0)
-    - React
   - react-native-google-maps (0.27.1):
     - Google-Maps-iOS-Utils (= 2.1.0)
     - GoogleMaps (= 3.5.0)
@@ -355,6 +354,15 @@ PODS:
     - ReactCommon/jscallinvoker (= 0.61.5)
   - RNCMaskedView (0.1.10):
     - React
+  - RNFirebase (5.6.0):
+    - Firebase/Core
+    - React
+    - RNFirebase/Crashlytics (= 5.6.0)
+  - RNFirebase/Crashlytics (5.6.0):
+    - Crashlytics
+    - Fabric
+    - Firebase/Core
+    - React
   - RNGestureHandler (1.6.1):
     - React
   - RNImageCropPicker (0.28.0):
@@ -405,7 +413,6 @@ DEPENDENCIES:
   - React-jsiexecutor (from `../node_modules/react-native/ReactCommon/jsiexecutor`)
   - React-jsinspector (from `../node_modules/react-native/ReactCommon/jsinspector`)
   - react-native-fetch-blob (from `../node_modules/react-native-fetch-blob`)
-  - react-native-firebase-push-notifications (from `../node_modules/react-native-firebase-push-notifications`)
   - react-native-google-maps (from `../node_modules/react-native-maps`)
   - react-native-image-picker (from `../node_modules/react-native-image-picker`)
   - react-native-mail (from `../node_modules/react-native-mail`)
@@ -424,6 +431,7 @@ DEPENDENCIES:
   - ReactCommon/jscallinvoker (from `../node_modules/react-native/ReactCommon`)
   - ReactCommon/turbomodule/core (from `../node_modules/react-native/ReactCommon`)
   - "RNCMaskedView (from `../node_modules/@react-native-community/masked-view`)"
+  - RNFirebase (from `../node_modules/react-native-firebase/ios`)
   - RNGestureHandler (from `../node_modules/react-native-gesture-handler`)
   - RNImageCropPicker (from `../node_modules/react-native-image-crop-picker`)
   - RNScreens (from `../node_modules/react-native-screens`)
@@ -435,6 +443,8 @@ DEPENDENCIES:
 SPEC REPOS:
   trunk:
     - boost-for-react-native
+    - Crashlytics
+    - Fabric
     - Firebase
     - FirebaseAnalytics
     - FirebaseAnalyticsInterop
@@ -493,8 +503,6 @@ EXTERNAL SOURCES:
     :path: "../node_modules/react-native/ReactCommon/jsinspector"
   react-native-fetch-blob:
     :path: "../node_modules/react-native-fetch-blob"
-  react-native-firebase-push-notifications:
-    :path: "../node_modules/react-native-firebase-push-notifications"
   react-native-google-maps:
     :path: "../node_modules/react-native-maps"
   react-native-image-picker:
@@ -529,6 +537,8 @@ EXTERNAL SOURCES:
     :path: "../node_modules/react-native/ReactCommon"
   RNCMaskedView:
     :path: "../node_modules/@react-native-community/masked-view"
+  RNFirebase:
+    :path: "../node_modules/react-native-firebase/ios"
   RNGestureHandler:
     :path: "../node_modules/react-native-gesture-handler"
   RNImageCropPicker:
@@ -547,7 +557,9 @@ EXTERNAL SOURCES:
 SPEC CHECKSUMS:
   blinkid-react-native: 9b041bfb625f1d323412de377c5bc932460d4043
   boost-for-react-native: 39c7adb57c4e60d6c5479dd8623128eb5b3f0f2c
+  Crashlytics: 540b7e5f5da5a042647227a5e3ac51d85eed06df
   DoubleConversion: 5805e889d232975c086db112ece9ed034df7a0b2
+  Fabric: 706c8b8098fff96c33c0db69cbf81f9c551d0d74
   FBLazyVector: aaeaf388755e4f29cd74acbc9e3b8da6d807c37f
   FBReactNativeSpec: 118d0d177724c2d67f08a59136eb29ef5943ec75
   Firebase: 458d109512200d1aca2e1b9b6cf7d68a869a4a46
@@ -583,7 +595,6 @@ SPEC CHECKSUMS:
   React-jsiexecutor: d5525f9ed5f782fdbacb64b9b01a43a9323d2386
   React-jsinspector: fa0ecc501688c3c4c34f28834a76302233e29dc0
   react-native-fetch-blob: 0cbdf9764c75d9438c162427395f4bc35a857d5a
-  react-native-firebase-push-notifications: 2cc911fce6683de8dfa5351c44e6c0f64729e730
   react-native-google-maps: 0a989abda71059db2caa98b9dacca7a8f38a47d0
   react-native-image-picker: fd93361c666f397bdf72f9c6c23f13d2685b9173
   react-native-mail: a864fb211feaa5845c6c478a3266de725afdce89
@@ -601,6 +612,7 @@ SPEC CHECKSUMS:
   React-RCTVibration: a49a1f42bf8f5acf1c3e297097517c6b3af377ad
   ReactCommon: 198c7c8d3591f975e5431bec1b0b3b581aa1c5dd
   RNCMaskedView: f5c7d14d6847b7b44853f7acb6284c1da30a3459
+  RNFirebase: 37daa9a346d070f9f6ee1f3b4aaf4c8e3b1d5d1c
   RNGestureHandler: 8f09cd560f8d533eb36da5a6c5a843af9f056b38
   RNImageCropPicker: cf129d17e042ce3e96fb9ada967c28f21f977c82
   RNScreens: cf198f915f8a2bf163de94ca9f5bfc8d326c3706

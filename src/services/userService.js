@@ -5,7 +5,7 @@ class UserService {
   registerConsumer(addParam){
     const newConsumersRef = Firebase.database().ref().child('consumers').push();
     const newConsumertKey = newConsumersRef.key;
-
+    addParam.consumerId = newConsumertKey;
     let consumerRef = Firebase.database().ref('consumers/' + newConsumertKey);
     return consumerRef.set(addParam).then((res)=>{
       return addParam;
@@ -23,7 +23,26 @@ class UserService {
       return addParam;
     }).catch();
   }  
+  updateConsumerProfile(param){
+    let consumerRef = Firebase.database().ref('consumers/' + addParam.productId);
+    return productRef.set(addParam).then((res)=>{
+      return addParam;
+    }).catch();
+  }  
+  updateDeviceToken(consumerId, deviceToken){
+    let consumerRef = Firebase.database().ref('consumers/' + consumerId );
+    return consumerRef.update({deviceToken : deviceToken}).then((res)=>{
+      return deviceToken;
+    }).catch();
 
+  }
+  updateDeviceDriverToken(driverId, deviceToken){
+    let driverRef = Firebase.database().ref('drivers/' + driverId );
+    return driverRef.update({deviceToken : deviceToken}).then((res)=>{
+      return deviceToken;
+    }).catch();
+
+  }  
   registerDriver(addParam){
 
     const newDriverRef = Firebase.database().ref().child('drivers').push();
@@ -45,6 +64,12 @@ class UserService {
 
   getCurrentUserInfo(uid){
     var ref = Firebase.database().ref('consumers');
+    return ref.orderByChild('uid').equalTo(uid).once("value").then((snapshot) => {
+      return snapshot;
+    }).catch(err=> console.log(err));
+  }   
+  getCurrentDriverInfo(uid){
+    var ref = Firebase.database().ref('drivers');
     return ref.orderByChild('uid').equalTo(uid).once("value").then((snapshot) => {
       return snapshot;
     }).catch(err=> console.log(err));

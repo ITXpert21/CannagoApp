@@ -11,7 +11,7 @@ import { Divider } from 'react-native-elements';
 import Textarea from 'react-native-textarea';
 import  stripe, { PaymentCardTextField } from 'tipsi-stripe';
 import cartService from '../../services/cartService';
-
+import { CreditCardInput, LiteCreditCardInput } from "react-native-credit-card-input";
 import axios from 'axios';
 stripe.setOptions({
   publishableKey: 'pk_test_RYCfmu3MGlNGid0AapN00V13005KibQNib'
@@ -57,7 +57,7 @@ export default class CheckoutPage extends Component{
 
   }
 
-  handleFieldParamsChange = (valid, params) => {
+  handleFieldParamsChange = ( valid, params) => {
     this.setState({
       valid,
       params,
@@ -72,30 +72,32 @@ export default class CheckoutPage extends Component{
     var expMonth = this.state.params.expMonth;
     var expYear = this.state.params.expYear;
     var cvc = this.state.params.cvc;
-
     const tokenObject = await stripe.createTokenWithCard({
-      number, expMonth, expYear, cvc
+      number, expYear, expMonth, cvc
     });
-    this.setState({ token: tokenObject.tokenId });
 
+    this.setState({ token: tokenObject.tokenId });
+    console.log("1111111111111", this.state.cartId);
     var totalPrice = this.state.totalGrossPrice + this.state.product_fee + this.state.grossprice * 0.05;
     axios({
       method : 'POST',
-      url : 'https://us-central1-cannago-ba078.cloudfunctions.net/payWithStripe',
+      url : 'http://localhost:5000/cannago-ba078/us-central1/payWithStripe',
       data : {
         amount: Math.round(totalPrice),
         currency : 'usd',
-        token : this.state.token
+        token : this.state.token,
+        cartId : this.state.cartId
       },
     }).then(response =>{
+
       this.state.cartlist[0].amount = Math.round(totalPrice);
       this.state.cartlist[0].currency = 'usd';
       this.state.cartlist[0].status = "paid";
       this.setState({loading: false});
-      cartService.updateCheckOutStatus(this.state.cartlist[0]).then(result=>{
+      // cartService.updateCheckOutStatus(this.state.cartlist[0]).then(result=>{
         
-        this.props.navigation.navigate('TrackingPage');
-      });
+      //   this.props.navigation.navigate('TrackingPage');
+      // });
     });
 
   };
@@ -150,18 +152,25 @@ export default class CheckoutPage extends Component{
             </View>   
             {/* <View style={styles.paymentmethodview}>
                 <Image source={require('../../assets/imgs/paypal.png')} ></Image>
-            </View>                                     */}
+            </View> */}                                    
           </View>
+
           <View style={{marginLeft : '10%', marginTop : 20}}>
             <Text style={{fontSize:16, fontWeight : '400', marginBottom : 10}}>Card Number</Text>
+
             <PaymentCardTextField
-              accessible={false}
+              ref={ (ref) => {
+                  this.paymentCardInput = ref;
+              }}
               style={styles.field}
+
               onParamsChange={this.handleFieldParamsChange}
               numberPlaceholder="XXXX XXXX XXXX XXXX"
               expirationPlaceholder="MM/YY"
               cvcPlaceholder="CVC"
-          />   
+
+              disabled={false}
+          />          
           </View>
           <View style={{marginLeft : '10%', marginTop : 20}}>
             <Text style={{fontSize:16, fontWeight : '400'}}>Special request</Text>
@@ -242,6 +251,7 @@ const styles = StyleSheet.create({
   totaltextview : {
       marginLeft : '10%', 
       marginRight : '10%', 
+      marginBottom : 40,
       flexDirection : 'row', 
       justifyContent : 'space-between'
   },

@@ -6,23 +6,167 @@ import {
   ScrollView,
   View,
   Text,
+  AsyncStorage,
+  Image,
+  ActivityIndicator,
+  TextInput,
   TouchableOpacity
 } from 'react-native';
 
-import Tabs from '../../components/consumer/tab/Tabs';
 import Icon from 'react-native-vector-icons/Feather';
-
+import Firebase from '../../config/firebase';
+import Toast from 'react-native-simple-toast';
+import RNFetchBlob from 'react-native-fetch-blob';
+import ImagePicker from 'react-native-image-picker';
+const Blob = RNFetchBlob.polyfill.Blob
+const fs = RNFetchBlob.fs
+window.XMLHttpRequest = RNFetchBlob.polyfill.XMLHttpRequest
+window.Blob = Blob
 export default class ProfileInfoPage extends Component{
-  state = {
-    selectTab: 'profile'
-  };    
+   
   constructor(props){
     super(props);
-    
-} 
+    this.state = {
+      isLoading : false,
+      isUpdating : false,
+      currentPassword : '',
+      newPassword : '',
+      photo: {},
+      photoUri: '',
+
+    }; 
+  } 
+
+  UNSAFE_componentWillMount(){
+    this.setState({isLoading : true});
+
+    AsyncStorage.getItem('userInfo').then((userinfo)=>{
+      this.setState(JSON.parse(userinfo));
+      this.setState({userInfo : JSON.parse(userinfo)});
+      this.setState({isLoading : false});
+
+    });
+  }   
+  chooseFile = () => {
+    var options = {
+      title: 'Select User Photo',
+      quality : 0.5,
+      maxWidth : 200,
+      maxHeight : 200,
+      storageOptions: {
+        skipBackup: true,
+        path: 'images',
+      },
+    };
+    ImagePicker.showImagePicker(options, response => {
+
+      if (response.didCancel) {
+        console.log('User cancelled image picker');
+      } else if (response.error) {
+        console.log('ImagePicker Error: ', response.error);
+      } else if (response.customButton) {
+        console.log('User tapped custom button: ', response.customButton);
+        alert(response.customButton);
+      } else {
+        let source = response;
+        // You can also display the image using data:
+        let sourceUri = { uri: 'data:image/jpeg;base64,' + response.uri };
+        this.setState({
+            photo: source,
+            photoUri: response.uri,
+            photo_url : response.uri
+        });
+
+      }
+    });
+  
+  }; 
+  uploadImage = (uid, uri, mime = 'application/octet-stream') => {
+
+    return new Promise((resolve, reject) => {
+      const uploadUri = Platform.OS === 'ios' ? uri.replace('file://', '') : uri
+      let uploadBlob = null
+
+      const ext = uri.split('.').pop(); 
+      const filename = uid + '.' + ext;
+
+      const imageRef = Firebase.storage().ref().child('consumers/userImage/' + filename);
+
+      fs.readFile(uploadUri, 'base64')
+        .then((data) => {
+          return Blob.build(data, { type: `${mime};BASE64` })
+        })
+        .then((blob) => {
+          uploadBlob = blob
+          return imageRef.put(blob, { contentType: 'image/jpeg' })
+        })
+        .then(() => {
+          uploadBlob.close()
+          return imageRef.getDownloadURL()
+        })
+        .then((url) => {
+          resolve(url)
+        })
+        .catch((error) => {
+          reject(error)
+      })
+    })
+  };
+  
+  
+  updateProfile = async()  => {
+    var  user = Firebase.auth().currentUser;
+    if(this.state.phonenumber == ''){
+      Toast.showWithGravity('Please insert phone number.', Toast.SHORT , Toast.TOP);
+      return;
+    }
+    if(this.state.email == ''){
+      Toast.showWithGravity('Please insert email.', Toast.SHORT , Toast.TOP);
+      return;
+    }
+    if(this.state.currentPassword == ''){
+      Toast.showWithGravity('Please insert old password.', Toast.SHORT , Toast.TOP);
+      return;
+    }   
+    if(this.state.newPassword == ''){
+      Toast.showWithGravity('Please insert new password.', Toast.SHORT , Toast.TOP);
+      return;
+    }   
+    this.setState({isUpdating: true });
+    await user.updateEmail(this.state.email);
+
+    Firebase.auth().signInWithEmailAndPassword(user.email, this.state.currentPassword)
+    .then((res) => {
+      this.state.userInfo.phonenumber = this.state.phonenumber;
+      this.state.userInfo.email = this.state.email;
+
+      user.updatePassword(this.state.currentPassword).then(() => {
+        if(this.state.photoUri == ''){
+          userService.updateConsumerProfile(this.state.userInfo).then(response =>{
+            this.setState({isUpdating: false, });
+            this.props.navigation.navigate('ProfilePage')
+          });   
+        }else{
+          this.uploadImage(res.user.uid, this.state.photoUri)
+          .then(url => { 
+            this.state.userInfo.photo_url = url;
+            userService.updateConsumerProfile(this.state.userInfo).then(response =>{
+              this.setState({isUpdating: false, });
+              this.props.navigation.navigate('ProfilePage')
+            });   
+          }).catch(error => console.log(error));
+        }  
+      });
+
+    }).catch((error) => {
+        console.log("reauthenticate ===", error);
+    });
+  }
+
   render(){
     return (
       <SafeAreaView style={styles.container}>
+    
         <View style={{flexDirection : 'row', width : '100%', height : 50, marginBottom : 30}}>
           
           <TouchableOpacity style={styles.backBtnView} onPress={() => this.props.navigation.navigate('ProfilePage')}>
@@ -35,44 +179,69 @@ export default class ProfileInfoPage extends Component{
 
       </View>        
         <ScrollView >
-        <View style={{alignItems : 'center'}}>
-          <View>
-            <View style={styles.logopicWrap}>
-              {/*<Image style={styles.logopic} source={require('../../../assets/imgs/photo.png')} ></Image>*/}
-            </View>          
-              <Text style={{color : '#a2a6a2', fontSize : 22, marginTop : 30}}>Welcome John H, 25</Text>
+        {this.state.isLoading &&
+          <View style={styles.logopicWrap}>
+            <ActivityIndicator size="large" color="#9E9E9E"/>
           </View>
-          <TouchableOpacity style={styles.textinputview}> 
-              <Icon name="user"  size={20} color="#37d613" style={styles.icon}/>
-              <Text style={{color : '#a2a6a2', fontSize : 16}}>Phone Number 768 7821 1232</Text>
+        }          
+        <View style={{alignItems : 'center', justifyContent : 'center'}}>
+          <TouchableOpacity style={{alignItems : 'center', justifyContent : 'center'}} onPress={() => this.chooseFile()} >
+          {!this.state.isLoading &&
+            <View style={styles.logopicWrap}>
+            {this.state.photo_url == undefined ?
+              <Image style={styles.camera} source={require('../../assets/imgs/camera.png')} ></Image> :
+              <Image style={styles.logopic} source={{ uri: this.state.photo_url }} ></Image>
+            }          
+            </View>
+            }     
+              <Text style={{color : '#a2a6a2', fontSize : 22, marginTop : 30}}>Welcome {this.state.first_name}</Text>
           </TouchableOpacity>
 
-          <TouchableOpacity style={styles.textinputview}> 
-              <Icon name="user"  size={20} color="#37d613" style={styles.icon}/>
-              <Text style={{color : '#a2a6a2', fontSize : 16}}>Email: JohnH@gmail.com</Text>
-          </TouchableOpacity>
-          <TouchableOpacity style={styles.textinputview}> 
-              <Icon name="user"  size={20} color="#37d613" style={styles.icon}/>
-              <Text style={{color : '#a2a6a2', fontSize : 16}}>Change Password</Text>
-          </TouchableOpacity>
-          <TouchableOpacity style={styles.textinputview}> 
-              <Icon name="user"  size={20} color="#37d613" style={styles.icon}/>
-              <Text style={{color : '#a2a6a2', fontSize : 16}}>UpdateID</Text>
-          </TouchableOpacity>            
+
+          <View style={styles.textinputview}> 
+            <Icon name="phone"  size={25} color="#37d613" style={styles.icon}/>
+            <TextInput style={styles.textinput} placeholder="Mobile number" value={this.state.phonenumber}
+                onChangeText={ phonenumber=> this.setState({phonenumber})} 
+            />          
+          </View>
+
+          <View style={styles.textinputview}> 
+            <Icon name="mail"  size={25} color="#37d613" style={styles.icon}/>
+            <TextInput style={styles.textinput} placeholder="Email Address" value={this.state.email}
+                onChangeText={ email=> this.setState({email})}  
+            />
+          </View>
+          <View style={styles.textinputview}> 
+            <Icon name="unlock"  size={25} color="#37d613" style={styles.icon}/>
+            <TextInput style={styles.textinput} placeholder="Current Password"
+              onChangeText={ currentPassword=> this.setState({currentPassword})}
+            />          
+          </View>
+          <View style={styles.textinputview}> 
+            <Icon name="lock"  size={25} color="#37d613" style={styles.icon}/>
+            <TextInput style={styles.textinput} placeholder="New Password" 
+              onChangeText={ newPassword=> this.setState({newPassword})}  
+            />          
+          </View>          
+          
           <TouchableOpacity style={styles.textinputview}> 
               <Icon name="user"  size={20} color="#37d613" style={styles.icon}/>
               <Text style={{color : '#a2a6a2', fontSize : 16}}>Deactive account</Text>
           </TouchableOpacity>    
+          {this.state.isUpdating &&
+            <View style={styles.logopicWrap}>
+              <ActivityIndicator size="large" color="#9E9E9E"/>
+            </View>
+          } 
+          <TouchableOpacity onPress={() => this.updateProfile()}>
+            <View style={styles.updateBtn}>
+              <Text style={styles.btnText}>Update Profile Info</Text>
+            </View>
+          </TouchableOpacity>          
         </View>
-        </ScrollView>
-        <Tabs 
-          gotoAddNewCartPage={() => this.props.navigation.navigate('AddNewCartPage')}
-          gotoProductCategoryPage={() => this.props.navigation.navigate('ProductCategoryPage')}
-          gotoProfilePage={() => this.props.navigation.navigate('ProfilePage')}
-          gotoSearchStorePage={() => this.props.navigation.navigate('SearchStorePage')}
 
-          selectTab={this.state.selectTab}
-          />        
+        </ScrollView>
+   
       </SafeAreaView>
 
     );
@@ -95,6 +264,8 @@ const styles = StyleSheet.create({
   logopic: {
     width : 150,
     height : 150,
+    borderRadius: 100,
+
   },
   logopicWrap : {
       alignItems : 'center',
@@ -132,8 +303,8 @@ const styles = StyleSheet.create({
       width : 250,
       height: 60,
   },
-  signinBtn: {
-      marginTop : 20,
+  updateBtn: {
+      marginTop : 30,
       backgroundColor:'#23b825',
       width : 320,
       height: 50,
@@ -145,7 +316,7 @@ const styles = StyleSheet.create({
       shadowOpacity: 0.9,
       elevation: 10,  
   },
-  signiText : {
+  btnText : {
       color : 'white',
       fontSize : 22,
       fontWeight : '400'
