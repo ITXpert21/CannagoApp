@@ -48,14 +48,7 @@ export default class TrackingPage extends Component{
           </View>
         </TouchableOpacity>
 
-{/* 
-        <Tabs 
-          gotoReportPage={() => this.props.navigation.navigate('ReportPage')}
-          gotoProductCategoryPage={() => this.props.navigation.navigate('ProductCategoryPage')}
-          gotoProfilePage={() => this.props.navigation.navigate('ProfilePage')}
-          gotoSearchStorePage={() => this.props.navigation.navigate('SearchStorePage')}
-          selectTab={this.state.selectTab}
-          />   */}
+
       </SafeAreaView>
 
     );

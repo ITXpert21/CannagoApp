@@ -11,7 +11,7 @@ import { Divider } from 'react-native-elements';
 import Textarea from 'react-native-textarea';
 import  stripe, { PaymentCardTextField } from 'tipsi-stripe';
 import cartService from '../../services/cartService';
-import { CreditCardInput, LiteCreditCardInput } from "react-native-credit-card-input";
+import GetLocation from 'react-native-get-location';
 import axios from 'axios';
 stripe.setOptions({
   publishableKey: 'pk_test_RYCfmu3MGlNGid0AapN00V13005KibQNib'
@@ -35,26 +35,40 @@ export default class CheckoutPage extends Component{
     }
   } 
   UNSAFE_componentWillMount(){
-    var productlist = this.props.navigation.state.params.navParam.productlist;
-    var cartId = this.props.navigation.state.params.navParam.cartId;
-    var cartlist = this.props.navigation.state.params.navParam.cartlist;
 
-    var product_fee = 0;
-    var grossprice = 0;
-    var totalGrossPrice = 0;
-    for( var i=0; i<productlist.length; i++){
-      product_fee =  productlist[i].ourfee * productlist[i].buyQuantity;
-      grossprice =  productlist[i].grossprice * productlist[i].buyQuantity;
-      totalGrossPrice =  totalGrossPrice + productlist[i].grossprice * productlist[i].buyQuantity;
-    }
-    this.setState({product_fee : Math.round(product_fee)});
-    this.setState({grossprice : Math.round(grossprice)});
-    this.setState({totalGrossPrice : Math.round(totalGrossPrice)});
-    this.setState({productlist : productlist});
-    this.setState({cartId : cartId});
-    this.setState({cartlist : cartlist});
+    GetLocation.getCurrentPosition({
+      enableHighAccuracy: true,
+      timeout: 15000,
+    })
+    .then(location => {
+      this.setState({currentLat : location.latitude});
+      this.setState({currentLng : location.longitude});
 
-
+      var productlist = this.props.navigation.state.params.navParam.productlist;
+      var cartId = this.props.navigation.state.params.navParam.cartId;
+      var cartlist = this.props.navigation.state.params.navParam.cartlist;
+  
+      var product_fee = 0;
+      var grossprice = 0;
+      var totalGrossPrice = 0;
+      for( var i=0; i<productlist.length; i++){
+        product_fee =  productlist[i].ourfee * productlist[i].buyQuantity;
+        grossprice =  productlist[i].grossprice * productlist[i].buyQuantity;
+        totalGrossPrice =  totalGrossPrice + productlist[i].grossprice * productlist[i].buyQuantity;
+      }
+      this.setState({product_fee : Math.round(product_fee)});
+      this.setState({grossprice : Math.round(grossprice)});
+      this.setState({totalGrossPrice : Math.round(totalGrossPrice)});
+      this.setState({productlist : productlist});
+      this.setState({cartId : cartId});
+      this.setState({cartlist : cartlist});      
+      
+    })
+    .catch(error => {
+        const { code, message } = error;
+        console.log('error');
+        console.warn(code, message);
+    })  
   }
 
   handleFieldParamsChange = ( valid, params) => {
@@ -66,7 +80,7 @@ export default class CheckoutPage extends Component{
 
   checkOut = async () => {
 
-
+    console.log("valide", this.state.valid);
     this.setState({ loading: true, token: null });
     var number = this.state.params.number;
     var expMonth = this.state.params.expMonth;
@@ -75,18 +89,18 @@ export default class CheckoutPage extends Component{
     const tokenObject = await stripe.createTokenWithCard({
       number, expYear, expMonth, cvc
     });
-
     this.setState({ token: tokenObject.tokenId });
-    console.log("1111111111111", this.state.cartId);
     var totalPrice = this.state.totalGrossPrice + this.state.product_fee + this.state.grossprice * 0.05;
     axios({
       method : 'POST',
-      url : 'http://localhost:5000/cannago-ba078/us-central1/payWithStripe',
+      url : 'https://us-central1-cannago-ba078.cloudfunctions.net/payWithStripe',
       data : {
         amount: Math.round(totalPrice),
         currency : 'usd',
         token : this.state.token,
-        cartId : this.state.cartId
+        cartId : this.state.cartId,
+        lat : this.state.currentLat,
+        lng : this.state.currentLng
       },
     }).then(response =>{
 
@@ -94,10 +108,10 @@ export default class CheckoutPage extends Component{
       this.state.cartlist[0].currency = 'usd';
       this.state.cartlist[0].status = "paid";
       this.setState({loading: false});
-      // cartService.updateCheckOutStatus(this.state.cartlist[0]).then(result=>{
+      cartService.updateCheckOutStatus(this.state.cartlist[0], this.state.currentLat, this.state.currentLng).then(result=>{
         
-      //   this.props.navigation.navigate('TrackingPage');
-      // });
+         this.props.navigation.navigate('TrackingPage');
+       });
     });
 
   };

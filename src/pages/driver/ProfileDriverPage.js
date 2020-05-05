@@ -9,6 +9,7 @@ import {
   Dimensions,
   Alert,
   AsyncStorage,
+  ActivityIndicator,
   View
 } from 'react-native';
 
@@ -22,6 +23,11 @@ import Icon from 'react-native-vector-icons/FontAwesome';
 import Dialog, { DialogFooter, DialogButton, DialogContent } from 'react-native-popup-dialog';
 import Textarea from 'react-native-textarea';
 import cartService from '../../services/cartService';
+import SendSMS from 'react-native-sms';
+import call from 'react-native-phone-call';
+import GetLocation from 'react-native-get-location';
+import axios from 'axios';
+
 
 export default class ProfileDriverPage extends Component{
 
@@ -29,23 +35,75 @@ export default class ProfileDriverPage extends Component{
     super(props);  
     this.state = {
       selectTab: 'profile',
-      popupVisible: false
+      popupVisible: false,
+      isLoading : false,
+      isCalcDuration : false,
+
     };  
+   
   } 
 
-  UNSAFE_componentWillMount(){
-    AsyncStorage.getItem('userInfo').then((userinfo)=>{
-      this.setState({uid : JSON.parse(userinfo).uid});
-      this.setState({driverId : JSON.parse(userinfo).driverId});
-      this.checkPermission();
-      this.messageListener();
-    });
+  async componentDidMount(){
+    GetLocation.getCurrentPosition({
+      enableHighAccuracy: true,
+      timeout: 15000,
+    })
+    .then(location => {
+      this.setState({currentLat : location.latitude});
+      this.setState({currentLng : location.longitude});
+
+      AsyncStorage.getItem('userInfo').then((userinfo)=>{
+        this.setState({driverInfo : JSON.parse(userinfo).uid});
+        this.setState({uid : JSON.parse(userinfo).uid});
+
+        this.setState({driverId : JSON.parse(userinfo).driverId});
+        this.checkPermission();
+        this.messageListener();
+      });
+    })
+    .catch(error => {
+        const { code, message } = error;
+        console.log('error');
+        console.warn(code, message);
+    })  
+    
+
   }  
+  UNSAFE_componentWillUnmount() {
+    this.notificationListener();
+    this.notificationOpenedListener();
+  }
   getDriverProfile = async () =>{
     //puttinig device token to database
     await userService.updateDeviceDriverToken(this.state.driverId, this.state.deviceToken);
 
   }
+  sendMessage() {
+    SendSMS.send({
+        //Message body
+        body: 'Please insert message',
+        //Recipients Number
+        recipients: ['0123456789'],
+        //An array of types that would trigger a "completed" response when using android
+        successTypes: ['sent', 'queued']
+    }, (completed, cancelled, error) => {
+        if(completed){
+          console.log('SMS Sent Completed');
+        }else if(cancelled){
+          console.log('SMS Sent Cancelled');
+        }else if(error){
+          console.log('Some error occured');
+        }
+    });
+  }  
+  call = () => {
+    //handler to make a call
+    const args = {
+      number: this.state.phonenumber,
+      prompt: false,
+    };
+    call(args).catch(console.error);
+  };
   checkPermission = async () => {
     const enabled = await firebase.messaging().hasPermission();
 
@@ -89,13 +147,17 @@ export default class ProfileDriverPage extends Component{
   messageListener = async () => {
     this.notificationListener = firebase.notifications().onNotification((notification) => {
         const { title, body } = notification;
-        this.setState({ popupVisible: true });
+        this.setState({cartLat :  notification._data.cartLat});
+        this.setState({cartLng :  notification._data.cartLng});
+
         this.getDeliveryInfo(notification._data.cartId);
     });
 
     this.notificationOpenedListener = firebase.notifications().onNotificationOpened((notificationOpen) => {
         const { title, body } = notificationOpen.notification;
-        this.setState({ popupVisible: true });
+        this.setState({cartLat :  notificationOpen.notification._data.cartLat});
+        this.setState({cartLng :  notificationOpen.notification._data.cartLng});
+
         this.getDeliveryInfo(notificationOpen.notification._data.cartId);
     });
 
@@ -111,12 +173,62 @@ export default class ProfileDriverPage extends Component{
     });
   }
 
-  getDeliveryInfo = async (cartId) => {
-    cartService.getDeliveryInfo(cartId).then(result =>{
-      this.setState(result);
-      this.setState({cartId : cartId})
-    });  
+  async getDeliveryInfo (cartId){
+    this.setState({isCalcDuration : true});
+    var first_name ;
+    var last_name ;
+    var address ;
+    var phonenumber ;
+    var photo_url ;
+    var consumer_lat;
+    var consumer_lng;
 
+    cartService.getDeliveryInfo(cartId).then(result =>{
+      result.forEach(function(consumerInfo){
+        console.log('consumerInfo', consumerInfo);
+         first_name = consumerInfo.val().first_name;
+         last_name = consumerInfo.val().last_name;
+         address = consumerInfo.val().address;
+         phonenumber = consumerInfo.val().phonenumber;
+         photo_url = consumerInfo.val().photo_url;
+         consumer_lat = consumerInfo.val().currentLat;
+         consumer_lng = consumerInfo.val().currentLng;
+      });
+
+      this.setState({first_name : first_name});
+      this.setState({last_name : last_name});
+      this.setState({address : address});
+      this.setState({phonenumber : phonenumber});
+      this.setState({photo_url : photo_url});
+      this.setState({cartId : cartId});
+      this.setState({ popupVisible: true });
+
+
+    });  
+console.log('https://maps.googleapis.com/maps/api/distancematrix/json?origins='+ this.state.cartLat + ',' + this.state.cartLng + '&destinations=' + this.state.currentLat + ',' + this.state.currentLng + '&mode=driving&key=AIzaSyDUNefWU4FzLHhoSaS7Wyb-VE2LvNDf3bs')
+    axios({
+      method : 'GET',
+      url : 'https://maps.googleapis.com/maps/api/distancematrix/json?origins='+ this.state.cartLat + ',' + this.state.cartLng + '&destinations=' + this.state.currentLat + ',' + this.state.currentLng + '&mode=driving&key=AIzaSyDUNefWU4FzLHhoSaS7Wyb-VE2LvNDf3bs'
+
+    }).then(response =>{
+      this.setState({isCalcDuration : false});
+
+      if(response.data.rows[0].elements[0].status == 'ZERO_RESULTS')
+        this.setState({duration : "immdediately"});
+      else{
+        var duration = response.data.rows[0].elements[0].duration;
+        this.setState({duration : duration.text});
+      }
+
+    });    
+
+
+  }
+  acceptOrder(){
+    //cartService.updateCartByDriver(this.state.cartId, this.state.driverInfo, this.state.duration).then(result=>{
+    cartService.updateCartByDriver('-M6aEm6jQYFaIODrmrK0', this.state.driverInfo, '10min').then(result=>{
+        //this.props.navigation.navigate('TrackingPage');
+    });
   }
 
   showAlert = (title, message) => {
@@ -180,23 +292,31 @@ export default class ProfileDriverPage extends Component{
               dialogStyle={{borderTopLeftRadius : 30, borderTopRightRadius : 30}}
               containerStyle={{ justifyContent: 'flex-end'}}
               width={screenWidth}
-              height={screenHeight * 2/5}
+              height={screenHeight * 1/4}
               dialogTitle={
-                <View>
-                  <View style={styles.dialogHeaderView}>
-                    <Image style={{width : 50, height : 50}} source={require('../../assets/imgs/driver_avatar.png')} ></Image>
-                    <Text style={{fontSize : 20, marginLeft : 20}}>Deliver to {this.state.first_name}.</Text>
-                    <Image style={{width : 40, height : 40 , marginLeft : 20}} source={require('../../assets/imgs/message.png')} ></Image>
-                    <Image style={{width : 40, height : 40, marginLeft : 10}} source={require('../../assets/imgs/phonecall.png')} ></Image>
-
+                <View style={{width : screenWidth,  flexDirection : 'row', marginTop : 10}}>
+ 
+                  <View style={{width : screenWidth * 2/12, alignItems:'center', justifyContent:'center'}}>
+                  {this.state.photo_url == undefined ?
+                    <Image style={{width : 50, height : 50}} source={require('../../assets/imgs/driver_avatar.png')} ></Image> :
+                    <Image style={{width : 50, height : 50, borderRadius : 10}} source={{ uri: this.state.photo_url }} ></Image>
+                  }  
                   </View>
-
+                  <View style={{width : screenWidth * 6/12, alignItems:'center', justifyContent:'center',}}>
+                    <Text style={{fontSize : 16}}>Deliver to {this.state.first_name}.</Text>
+                  </View>
+                  <TouchableOpacity onPress={this.sendMessage.bind(this)} style={{width : screenWidth * 2/12, alignItems:'center', justifyContent:'center',}}>
+                    <Image style={{width : 40, height : 40}} source={require('../../assets/imgs/message.png')} ></Image>
+                  </TouchableOpacity>
+                  <TouchableOpacity onPress={this.call} style={{width : screenWidth * 2/12, alignItems:'center', justifyContent:'center',}}>
+                    <Image style={{width : 40, height : 40}} source={require('../../assets/imgs/phonecall.png')} ></Image>
+                  </TouchableOpacity>
                 </View>
 
               }
-              // onTouchOutside={() => {
-              // this.setState({ popupVisible: true });
-              // }}
+              onTouchOutside={() => {
+              this.setState({ popupVisible: false });
+              }}
               >
               <DialogContent>
 {/*                <View style={{flexDirection:'row', width : '100%', margin : 20}}>
@@ -214,7 +334,11 @@ export default class ProfileDriverPage extends Component{
                   <Image source={require('../../assets/imgs/car.png')} ></Image>
                   <View>
                     <Text style={{fontSize : 16, color : '#a0a3a0', marginLeft : 20,  marginBottom : 5}}>Estimate complete in</Text>
-                    <Text style={{fontSize : 16,marginLeft : 20,}}>10 Mins</Text>
+                    {this.state.isCalcDuration ?
+                        <ActivityIndicator size="large" color="#9E9E9E"/> :
+                        <Text style={{fontSize : 16,marginLeft : 20,}}>{this.state.duration}</Text>
+                    }
+                    
                   </View>
 
                 </View>
@@ -222,7 +346,7 @@ export default class ProfileDriverPage extends Component{
                     <TouchableOpacity style={styles.declineBtn}>
                       <Text>Decline</Text>
                     </TouchableOpacity>
-                    <TouchableOpacity style={styles.acceptBtn} onPress={() => {this.setState({ popupVisible: false }); this.props.navigation.navigate('TrackingDriverPage')}}>
+                    <TouchableOpacity style={styles.acceptBtn} onPress={() => this.acceptOrder()}>
                       <Text style={{color : 'white'}}>Accept</Text>
                     </TouchableOpacity>                    
                 </View>

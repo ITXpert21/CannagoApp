@@ -24,6 +24,7 @@ import userService from '../../services/userService';
 import Toast from 'react-native-simple-toast';
 import Firebase from '../../config/firebase';
 import RNFetchBlob from 'react-native-fetch-blob';
+import cartService from '../../services/cartService';
 
 // import ImagePicker from 'react-native-image-crop-picker';
 const licenseKey = Platform.select({
@@ -67,6 +68,7 @@ export default class SignupPage extends Component{
     };    
   } 
   UNSAFE_componentWillMount(){
+
   }    
  
   chooseFile = () => {

@@ -3,6 +3,7 @@
 #import <React/RCTBridge.h>
 #import <React/RCTBundleURLProvider.h>
 #import <React/RCTRootView.h>
+#import <GoogleMaps/GoogleMaps.h>
 #import <Firebase.h>
  #import "RNFirebaseNotifications.h"
  #import "RNFirebaseMessaging.h"
@@ -32,6 +33,7 @@
 //#if DEBUG
 //  InitializeFlipper(application);
 //#endif
+  [GMSServices provideAPIKey:@"AIzaSyB8nm4Avunu0rENuo2tpWgV8jKUKLFbESw"];
 
   RCTBridge *bridge = [[RCTBridge alloc] initWithDelegate:self launchOptions:launchOptions];
   RCTRootView *rootView = [[RCTRootView alloc] initWithBridge:bridge

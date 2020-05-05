@@ -36,7 +36,6 @@ export default class SigninDriverPage extends Component{
 
       Firebase.auth().signInWithEmailAndPassword(this.state.email, this.state.password)
       .then((res) => {
-        this.setState({isLoading: false});
         this._storeData(res.user.uid);
       })
       .catch((error) => {

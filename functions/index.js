@@ -19,8 +19,8 @@ const stripe = require('stripe')('sk_test_dCBAClJnEZ9Fms8r4AQQzgVz00JKkQgVZj');
 exports.payWithStripe = functions.https.onRequest((request, response) => {
     var cartId = request.body.cartId;
     var driverRef = admin.database().ref('drivers');
-
-console.log(cartId);
+    var cartLat = request.body.lat;
+    var cartLng = request.body.lng;
 
      return stripe.charges.create({
         amount: request.body.amount,
@@ -35,13 +35,13 @@ console.log(cartId);
               //data : snapshot.val()
           },
           data : {
-            cartId : cartId
+            cartId : cartId,
+            cartLat : cartLat.toString(),
+            cartLng : cartLng.toString()
           }
         };
         driverRef.on("value", function(snapshot){
           snapshot.forEach(function(snap){
-            console.log("12121212121212", snap.val())
-
             admin.messaging().sendToDevice(snap.val().deviceToken, payload);
           });
         });

@@ -30,12 +30,21 @@ class CartService {
     }).catch();
   }  
   
-  updateCheckOutStatus(param){
+  updateCheckOutStatus(param, currentLat, currentLng){
+    param.currentLat = currentLat;
+    param.currentLng = currentLng;
+    param.driverInfo = '';
+    param.duration = '';
     let cartRef = Firebase.database().ref('carts/' + param.cartId ) ;
     return cartRef.set(param).then((res)=>{
       return param;
     }).catch();
   }  
+  updateCartByDriver(cartId, drivereInfo, duration){
+    let cartRef = Firebase.database().ref('carts/' + cartId ) ;
+    return cartRef.set({driverInfo : drivereInfo, duration : duration, status : 'driverAccepted'});
+  }  
+
   getProducts(uid){
     var ref = Firebase.database().ref('products');
     return ref.once("value").then((snapshot) => {
@@ -48,7 +57,7 @@ class CartService {
     return ref.once("value").then((snapshot) => {
       var consumerRef = Firebase.database().ref('consumers');
       return consumerRef.orderByChild('uid').equalTo(snapshot.val().cart_uid).once("value").then((consumerInfo) => {
-        return consumerInfo.val();
+        return consumerInfo;
       })
    
     }).catch(err=> console.log(err));
